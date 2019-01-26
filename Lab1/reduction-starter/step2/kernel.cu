@@ -24,8 +24,12 @@ __global__ void reduction(float *out, float *in, unsigned size)
     unsigned int start = 2*blockIdx.x*blockDim.x;
     if (start + t < size)
         partialSum[t] = in[start + t];
+    else
+        partialSum[t] = 0;
     if (start + blockDim.x + t < size)
         partialSum[blockDim.x + t] = in[start + blockDim.x + t];
+    else
+        partialSum[blockDim.x + t] = 0;
 
     // naive version
     // for (unsigned int stride = 1; stride <= blockDim.x; stride *= 2)
