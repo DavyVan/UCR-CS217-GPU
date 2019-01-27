@@ -42,9 +42,10 @@ __global__ void reduction(float *out, float *in, unsigned size)
     for (unsigned int stride = blockDim.x; stride > 0; stride /= 2)
     {
         __syncthreads();
-        if (t < stride && (t + 2 * blockIdx.x * blockDim.x + stride < size))
+        if (t < stride)
             partialSum[t] += partialSum[t + stride];
     }
 
-    out[blockIdx.x] = partialSum[0];
+    if (t == 0)
+        out[blockIdx.x] = partialSum[0];
 }
