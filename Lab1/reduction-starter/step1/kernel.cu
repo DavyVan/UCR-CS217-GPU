@@ -22,8 +22,14 @@ __global__ void reduction(float *out, float *in, unsigned size)
 
     unsigned int t = threadIdx.x;
     unsigned int start = 2*blockIdx.x*blockDim.x;
-    partialSum[t] = in[start + t];
-    partialSum[blockDim.x + t] = in[start + blockDim.x + t];
+    if (start + t < size)
+        partialSum[t] = in[start + t];
+    else
+        partialSum[t] = 0.0;
+    if (start + blockDim.x + t < size)
+        partialSum[blockDim.x + t] = in[start + blockDim.x + t];
+    else
+        partialSum[blockDim.x + t] = 0.0;
 
     for (unsigned int stride = 1; stride <= blockDim.x; stride *= 2)
     {
@@ -32,5 +38,6 @@ __global__ void reduction(float *out, float *in, unsigned size)
             partialSum[2*t] += partialSum[2*t + stride];
     }
 
-    out[blockIdx.x] = partialSum[0];
+    if (t == 0)
+        out[blockIdx.x] = partialSum[0];
 }
