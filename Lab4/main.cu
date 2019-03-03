@@ -34,7 +34,7 @@ int main (int argc, char *argv[])
     // Initialize streams
     cudaStream_t streams[numStream];
     for (int i = 0; i < numStream; i++)
-        cudaSteramCreate(&streams[i]);
+        cudaStreamCreate(&streams[i]);
    
     dim3 dim_grid, dim_block;
 
@@ -107,13 +107,13 @@ int main (int argc, char *argv[])
     {
         if (i != numStream-1)
         {
-            cudaMemcpyAsync(A_d[i], h_A + i*segmentLen, sizeof(float)*segmentLen, cudaMemcpyHostToDevice, streams[i]);
-            cudaMemcpyAsync(B_d[i], h_B + i*segmentLen, sizeof(float)*segmentLen, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync(A_d[i], A_h + i*segmentLen, sizeof(float)*segmentLen, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync(B_d[i], B_h + i*segmentLen, sizeof(float)*segmentLen, cudaMemcpyHostToDevice, streams[i]);
         }
         else
         {
-            cudaMemcpyAsync(A_d[i], h_A + i*segmentLen, sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyHostToDevice, streams[i]);
-            cudaMemcpyAsync(B_d[i], h_B + i*segmentLen, sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync(A_d[i], A_h + i*segmentLen, sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync(B_d[i], B_h + i*segmentLen, sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyHostToDevice, streams[i]);
         }
     }
 
@@ -188,7 +188,7 @@ int main (int argc, char *argv[])
         cudaFree(A_d[i]);
         cudaFree(B_d[i]);
         cudaFree(C_d[i]);
-        cudeStreamDestroy(streams[i]);
+        cudaStreamDestroy(streams[i]);
     }
     return 0;
 
