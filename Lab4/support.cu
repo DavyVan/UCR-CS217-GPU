@@ -19,7 +19,7 @@ void verify(float *A, float *B, float *C, unsigned int n) {
 
   for(int i = 0; i < n; ++i) {
       float sum = A[i]+B[i];
-      printf("\t%f/%f",sum,C[i]);
+      // printf("\t%f/%f",sum,C[i]);
       float relativeError = (sum - C[i])/sum;
       if (relativeError > relativeTolerance
         || relativeError < -relativeTolerance) {
