@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
 
     // Copy host variables to device ------------------------------------------
 
-    printf("Copying data from host to device..."); fflush(stdout);
+    printf("Copying data from host to device...\n"); fflush(stdout);
     startTime(&timer);
 
     //INSERT CODE HERE
@@ -121,7 +121,7 @@ int main (int argc, char *argv[])
     // stopTime(&timer); printf("%f s\n", elapsedTime(timer));
 
     // Launch kernel  ---------------------------
-    printf("Launching kernel..."); fflush(stdout);
+    printf("Launching kernel...\n"); fflush(stdout);
     // startTime(&timer);
 
     // basicVecAdd(A_d, B_d, C_d, VecSize); //In kernel.cu
@@ -152,12 +152,10 @@ int main (int argc, char *argv[])
     {
         if (i != numStream-1)
         {
-            printf("stream-%d, offset=%d, size=%d\n", i, i*segmentLen, segmentLen);
             cudaMemcpyAsync(C_h + i*segmentLen, C_d[i], sizeof(float)*segmentLen, cudaMemcpyDeviceToHost, streams[i]);
         }
         else
         {
-            printf("stream-%d, offset=%d, size=%d, VecSize%%numStream=%u%%%u=%d\n", i, i*segmentLen, segmentLen + VecSize % numStream, VecSize, numStream, VecSize%numStream);
             cudaMemcpyAsync(C_h + i*segmentLen, C_d[i], sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyDeviceToHost, streams[i]);
         }
     }
