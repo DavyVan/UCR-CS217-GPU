@@ -152,10 +152,12 @@ int main (int argc, char *argv[])
     {
         if (i != numStream)
         {
+            printf("stream-%d, offset=%d, size=%d\n", i, i*segmentLen, segmentLen);
             cudaMemcpyAsync(C_h + i*segmentLen, C_d[i], sizeof(float)*segmentLen, cudaMemcpyDeviceToHost, streams[i]);
         }
         else
         {
+            printf("stream-%d, offset=%d, size=%d\n", i, i*segmentLen, segmentLen + VecSize % numStream);
             cudaMemcpyAsync(C_h + i*segmentLen, C_d[i], sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyDeviceToHost, streams[i]);
         }
     }
