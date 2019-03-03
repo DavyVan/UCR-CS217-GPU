@@ -157,7 +157,7 @@ int main (int argc, char *argv[])
         }
         else
         {
-            printf("stream-%d, offset=%d, size=%d\n", i, i*segmentLen, segmentLen + VecSize % numStream);
+            printf("stream-%d, offset=%d, size=%d, VecSize%%numStream=%u%%%u=%d\n", i, i*segmentLen, segmentLen + VecSize % numStream, VecSize, numStream, VecSize%numStream);
             cudaMemcpyAsync(C_h + i*segmentLen, C_d[i], sizeof(float)*(segmentLen + VecSize % numStream), cudaMemcpyDeviceToHost, streams[i]);
         }
     }
