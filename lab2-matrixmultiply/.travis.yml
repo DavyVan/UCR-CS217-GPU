@@ -1,0 +1,14 @@
+sudo: required
+
+services: 
+    - docker
+
+before_install:
+    - docker pull socalucr/gpgpu-sim
+
+language: cpp
+
+
+script: docker run -v ${TRAVIS_BUILD_DIR}:/root/src/ -w /root -e CUDA_INSTALL_PATH=/usr/local/cuda socalucr/gpgpu-sim /bin/bash -c 'cd gpgpu-sim_distribution/; source setup_environment; make -j 2; cd /root/src/; make; cp /root/gpgpu-sim_distribution/configs/GTX480/* .; sed -i "s/gpgpu\_ptx\_sim\_mode 0/gpgpu\_ptx\_sim\_mode 1/" gpgpusim.config; ./sgemm-tiled 128 &> square.out; tail -n 2 square.out | diff test/square.solution -; ./sgemm-tiled 128 256 256 &> rectangle.out; tail -n 2 rectangle.out | diff test/rectangle.solution -; ./sgemm-tiled 120 201 250 &> odd.out; tail -n 2 odd.out | diff test/odd.solution -; ' 
+ 
+
